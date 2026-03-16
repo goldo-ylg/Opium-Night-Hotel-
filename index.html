@@ -38,7 +38,7 @@
             border: 1px solid #444;
             color: white;
             border-radius: 8px;
-            font-size: 16px; /* Évite le zoom auto sur iPhone */
+            font-size: 16px;
         }
 
         #login-btn {
@@ -49,9 +49,12 @@
             font-weight: bold;
             border-radius: 8px;
             cursor: pointer;
+            transition: 0.3s;
         }
 
-        /* --- SITE PRINCIPAL (Contenu) --- */
+        #login-btn:hover { background: #f1c40f; }
+
+        /* --- SITE PRINCIPAL --- */
         #main-site { 
             display: none; 
             width: 100%; 
@@ -60,14 +63,15 @@
             box-sizing: border-box;
         }
 
-        h1 { color: #d4af37; text-align: center; letter-spacing: 2px; }
+        h1 { color: #d4af37; text-align: center; letter-spacing: 2px; text-transform: uppercase; }
 
-        /* --- MENU CONTACT (Responsive) --- */
+        /* --- MENU CONTACT & DECONNEXION --- */
         .menu-container { position: fixed; top: 15px; right: 15px; z-index: 2000; }
         .bouton-dots { 
             background: #d4af37; color: black; width: 50px; height: 50px; 
             border-radius: 10px; display: flex; align-items: center; 
             justify-content: center; font-size: 25px; cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
 
         .contact-card {
@@ -76,7 +80,19 @@
             width: 260px; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.8);
         }
 
-        /* --- GRILLE DES CHAMBRES RESPONSIVE --- */
+        .btn-logout {
+            width: 100%;
+            padding: 10px;
+            margin-top: 15px;
+            background: #c0392b;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* --- GRILLE DES CHAMBRES --- */
         .etage-container {
             background: #161616; margin: 20px 0; padding: 15px;
             border-radius: 12px; border-left: 4px solid #d4af37;
@@ -84,7 +100,6 @@
 
         .chambres-grid {
             display: grid;
-            /* PAR DÉFAUT (PC) : 10 colonnes */
             grid-template-columns: repeat(10, 1fr);
             gap: 8px;
             margin-top: 10px;
@@ -99,25 +114,14 @@
         .libre { background: #27ae60; border: 1px solid #1e8449; }
         .occupe { background: #c0392b; border: 1px solid #922b21; }
 
-        /* --- MEDIA QUERIES (ADAPTATION TÉLÉPHONE) --- */
+        /* --- RESPONSIVE --- */
         @media (max-width: 768px) {
-            .chambres-grid {
-                /* SUR TABLETTE : 5 colonnes */
-                grid-template-columns: repeat(5, 1fr);
-            }
-            .contact-card {
-                position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-                width: 100%; height: 100%; border-radius: 0; border: none;
-                box-sizing: border-box;
-            }
+            .chambres-grid { grid-template-columns: repeat(5, 1fr); }
+            .contact-card { position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; border-radius: 0; }
         }
 
         @media (max-width: 480px) {
-            .chambres-grid {
-                /* SUR PETIT TÉLÉPHONE : 4 colonnes */
-                grid-template-columns: repeat(4, 1fr);
-            }
-            h1 { font-size: 1.5rem; }
+            .chambres-grid { grid-template-columns: repeat(4, 1fr); }
         }
     </style>
 </head>
@@ -125,6 +129,7 @@
 
     <div id="login-screen">
         <h2 style="color:#d4af37">OPIUM NIGHT</h2>
+        <p style="font-size: 0.8em; color: #888;">Accès Réservé au Personnel</p>
         <input type="text" id="username" placeholder="Identifiant">
         <input type="password" id="password" placeholder="Mot de passe">
         <button id="login-btn" onclick="checkLogin()">ACCÉDER</button>
@@ -134,12 +139,22 @@
         <div class="menu-container">
             <div class="bouton-dots" onclick="toggleMenu()">⋮</div>
             <div id="contactCard" class="contact-card">
-                <button onclick="toggleMenu()" style="float:right; background:none; border:none; color:gold; font-size:20px;">✕</button>
-                <h3 style="color:gold">Personnel</h3>
-                <div style="margin-bottom:10px"><strong>Juan de la Rosa</strong><br><small>Réception</small><br>📞 555-1111</div>
-                <div style="margin-bottom:10px"><strong>Elena Rico</strong><br><small>Barmaid</small><br>📞 555-3333</div>
-                <div style="margin-bottom:10px"><strong>Mr. Opium</strong><br><small>Directeur</small><br>📞 555-5555</div>
-                <div style="margin-bottom:10px"><strong>Marco</strong><br><small>Sécurité</small><br>📞 555-6666</div>
+                <button onclick="toggleMenu()" style="float:right; background:none; border:none; color:gold; font-size:20px; cursor:pointer;">✕</button>
+                <h3 style="color:gold; margin-top:0;">Personnel</h3>
+                
+                <div style="margin-bottom:10px; font-size: 0.9em;">
+                    <strong>Juan de la Rosa</strong><br><span style="color:gold; font-size:0.8em;">RÉCEPTION</span><br>📞 555-1111
+                </div>
+                <div style="margin-bottom:10px; font-size: 0.9em;">
+                    <strong>Mr. Opium</strong><br><span style="color:gold; font-size:0.8em;">DIRECTEUR</span><br>📞 555-5555
+                </div>
+                <div style="margin-bottom:10px; font-size: 0.9em;">
+                    <strong>Marco</strong><br><span style="color:gold; font-size:0.8em;">SÉCURITÉ</span><br>📞 555-6666
+                </div>
+
+                <hr style="border: 0; border-top: 1px solid #333;">
+                
+                <button class="btn-logout" onclick="logout()">SE DÉCONNECTER</button>
             </div>
         </div>
 
@@ -151,14 +166,32 @@
         const USER = "admin";
         const PASS = "opium2024";
 
+        // Fonction pour se connecter
         function checkLogin() {
-            if(document.getElementById('username').value === USER && document.getElementById('password').value === PASS) {
+            const u = document.getElementById('username').value;
+            const p = document.getElementById('password').value;
+            
+            if(u === USER && p === PASS) {
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('main-site').style.display = 'block';
                 renderHotel();
-            } else { alert("Accès refusé"); }
+            } else { 
+                alert("Identifiants incorrects"); 
+            }
         }
 
+        // Fonction pour se déconnecter
+        function logout() {
+            // Cacher le site et vider les champs
+            document.getElementById('main-site').style.display = 'none';
+            document.getElementById('login-screen').style.display = 'block';
+            document.getElementById('username').value = "";
+            document.getElementById('password').value = "";
+            // Fermer la petite case de contact
+            document.getElementById('contactCard').style.display = 'none';
+        }
+
+        // Gestion de la mémoire locale
         let db = JSON.parse(localStorage.getItem('opiumResa')) || {};
 
         function renderHotel() {
@@ -188,9 +221,13 @@
             if(!db[n]) {
                 let name = prompt("Nom du client :");
                 let tel = prompt("Téléphone :", "555-0000");
-                if(name && tel) { db[n] = {name, tel}; }
+                if(name && tel) { 
+                    db[n] = {name, tel}; 
+                }
             } else {
-                if(confirm(`Occupé par ${db[n].name}\nLibérer ?`)) { delete db[n]; }
+                if(confirm(`Occupé par ${db[n].name} (${db[n].tel})\nLibérer la chambre ?`)) { 
+                    delete db[n]; 
+                }
             }
             localStorage.setItem('opiumResa', JSON.stringify(db));
             renderHotel();
