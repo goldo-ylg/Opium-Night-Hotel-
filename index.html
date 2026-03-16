@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Opium Night - Gestion</title>
+    <title>Opium Night - Système de Réservation</title>
     <style>
-        /* --- STYLE GÉNÉRAL --- */
+        /* --- STYLE DE BASE --- */
         body {
             font-family: 'Segoe UI', Roboto, sans-serif;
             background-color: #0a0a0a;
@@ -30,16 +30,19 @@
 
         input {
             width: 100%;
-            padding: 15px;
-            margin: 10px 0;
+            padding: 12px;
+            margin: 8px 0;
             background: #222;
             border: 1px solid #444;
             color: white;
-            border-radius: 8px;
+            border-radius: 6px;
             box-sizing: border-box;
+            font-size: 14px;
         }
 
-        #login-btn {
+        label { display: block; text-align: left; font-size: 0.8em; color: #d4af37; margin-top: 5px; }
+
+        #login-btn, .btn-confirm {
             width: 100%;
             padding: 15px;
             background: #d4af37;
@@ -47,54 +50,59 @@
             font-weight: bold;
             border-radius: 8px;
             cursor: pointer;
+            margin-top: 10px;
         }
 
         /* --- SITE PRINCIPAL --- */
         #main-site { display: none; width: 100%; max-width: 1200px; padding: 20px; box-sizing: border-box; }
-        h1 { color: #d4af37; text-align: center; text-transform: uppercase; }
+        h1 { color: #d4af37; text-align: center; text-transform: uppercase; letter-spacing: 2px; }
 
-        /* --- MENU CONTACT (MODIFIÉ) --- */
+        /* --- MENU CONTACT --- */
         .menu-container { position: fixed; top: 15px; right: 15px; z-index: 2000; }
-        
         .bouton-dots { 
             background: #d4af37; color: black; width: 50px; height: 50px; 
             border-radius: 10px; display: flex; align-items: center; 
             justify-content: center; font-size: 25px; cursor: pointer;
-            user-select: none;
         }
-
         .contact-card {
-            display: none; 
-            background: #1a1a1a; 
-            border: 1px solid #d4af37;
-            padding: 20px; 
-            position: absolute; 
-            top: 60px; 
-            right: 0;
-            width: 260px; 
-            border-radius: 10px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            display: none; background: #1a1a1a; border: 1px solid #d4af37;
+            padding: 20px; position: absolute; top: 60px; right: 0;
+            width: 260px; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.8);
         }
 
-        .btn-logout {
-            width: 100%; padding: 10px; margin-top: 15px;
-            background: #c0392b; color: white; border: none;
-            border-radius: 5px; cursor: pointer; font-weight: bold;
+        /* --- MODALE DE RÉSERVATION (LA CASE LONGUE) --- */
+        #reservation-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #1a1a1a;
+            border: 2px solid #d4af37;
+            padding: 25px;
+            z-index: 3000;
+            width: 90%;
+            max-width: 400px;
+            border-radius: 15px;
+            box-shadow: 0 0 50px rgba(0,0,0,1);
         }
 
-        /* --- GRILLE --- */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 2500;
+        }
+
+        /* --- GRILLE DES CHAMBRES --- */
         .etage-container { background: #161616; margin: 20px 0; padding: 15px; border-radius: 12px; border-left: 4px solid #d4af37; }
         .chambres-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 8px; margin-top: 10px; }
         .chambre { aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 14px; }
         .libre { background: #27ae60; }
         .occupe { background: #c0392b; }
 
-        @media (max-width: 768px) {
-            .chambres-grid { grid-template-columns: repeat(5, 1fr); }
-        }
-        @media (max-width: 480px) {
-            .chambres-grid { grid-template-columns: repeat(4, 1fr); }
-        }
+        @media (max-width: 768px) { .chambres-grid { grid-template-columns: repeat(5, 1fr); } }
     </style>
 </head>
 <body onclick="closeMenuOutside(event)">
@@ -109,14 +117,11 @@
     <div id="main-site">
         <div class="menu-container" id="menuArea">
             <div class="bouton-dots" onclick="toggleMenu(event)">⋮</div>
-            
             <div id="contactCard" class="contact-card">
                 <h3 style="color:gold; margin-top:0;">Personnel</h3>
-                <div style="margin-bottom:10px;"><strong>Juan de la Rosa</strong><br><small>Réception</small><br>📞 555-8161</div>
-                <div style="margin-bottom:10px;"><strong>Esme Almeida</strong><br><small>Barmaid</small><br>📞 555-6158</div>
-                <div style="margin-bottom:10px;"><strong>Marco</strong><br><small>Sécurité</small><br>📞 555-3279</div>
-                <div style="margin-bottom:10px;"><strong>Phibi Jackson</strong><br><small>Femme de Ménage</small><br>📞 555-1956</div>
-                <button class="btn-logout" onclick="logout()">SE DÉCONNECTER</button>
+                <div style="margin-bottom:10px;"><strong>Juan de la Rosa</strong><br><small>Réception</small><br>📞 555-1111</div>
+                <div style="margin-bottom:10px;"><strong>Mr. Opium</strong><br><small>Directeur</small><br>📞 555-5555</div>
+                <button style="background:#c0392b; color:white; border:none; width:100%; padding:8px; border-radius:5px; cursor:pointer;" onclick="logout()">DÉCONNEXION</button>
             </div>
         </div>
 
@@ -124,10 +129,36 @@
         <div id="hotel-layout"></div>
     </div>
 
+    <div class="overlay" id="overlay" onclick="closeModal()"></div>
+    <div id="reservation-modal">
+        <h2 id="modal-title" style="color:gold; margin-top:0;">Réservation</h2>
+        
+        <label>Nom & Prénom</label>
+        <input type="text" id="cust-name" placeholder="Ex: Jean Dupont">
+        
+        <label>Numéro de Téléphone</label>
+        <input type="text" id="cust-tel" placeholder="Ex: 555-0000">
+        
+        <div style="display: flex; gap: 10px;">
+            <div style="flex:1">
+                <label>Date d'arrivée</label>
+                <input type="date" id="date-start">
+            </div>
+            <div style="flex:1">
+                <label>Date de départ</label>
+                <input type="date" id="date-end">
+            </div>
+        </div>
+
+        <button class="btn-confirm" id="btn-save" onclick="saveReservation()">CONFIRMER</button>
+        <button onclick="closeModal()" style="background:none; border:none; color:#888; width:100%; margin-top:10px; cursor:pointer;">Annuler</button>
+    </div>
+
     <script>
         const USER = "admin";
         const PASS = "opium2024";
         let db = JSON.parse(localStorage.getItem('opiumResa')) || {};
+        let currentRoom = null;
 
         function checkLogin() {
             if(document.getElementById('username').value === USER && document.getElementById('password').value === PASS) {
@@ -137,27 +168,7 @@
             } else { alert("Accès refusé"); }
         }
 
-        function logout() {
-            document.getElementById('main-site').style.display = 'none';
-            document.getElementById('login-screen').style.display = 'block';
-            document.getElementById('contactCard').style.display = 'none';
-        }
-
-        // OUVRIR / FERMER LE MENU
-        function toggleMenu(event) {
-            event.stopPropagation(); // Empêche la fermeture immédiate par closeMenuOutside
-            const card = document.getElementById('contactCard');
-            card.style.display = (card.style.display === 'block') ? 'none' : 'block';
-        }
-
-        // FERMER SI ON CLIQUE AILLEURS
-        function closeMenuOutside(event) {
-            const card = document.getElementById('contactCard');
-            const menuArea = document.getElementById('menuArea');
-            if (card.style.display === 'block' && !menuArea.contains(event.target)) {
-                card.style.display = 'none';
-            }
-        }
+        function logout() { location.reload(); }
 
         function renderHotel() {
             const container = document.getElementById('hotel-layout');
@@ -173,7 +184,7 @@
                     let box = document.createElement('div');
                     box.className = `chambre ${db[num] ? 'occupe' : 'libre'}`;
                     box.innerText = num;
-                    box.onclick = () => handleRoom(num);
+                    box.onclick = () => openBooking(num);
                     grid.appendChild(box);
                 }
                 section.appendChild(grid);
@@ -181,16 +192,67 @@
             }
         }
 
-        function handleRoom(n) {
-            if(!db[n]) {
-                let name = prompt("Nom du client :");
-                let tel = prompt("Téléphone :");
-                if(name && tel) db[n] = {name, tel};
+        function openBooking(num) {
+            currentRoom = num;
+            if(!db[num]) {
+                document.getElementById('modal-title').innerText = "Réserver Chambre " + num;
+                document.getElementById('cust-name').value = "";
+                document.getElementById('cust-tel').value = "";
+                document.getElementById('date-start').value = "";
+                document.getElementById('date-end').value = "";
+                document.getElementById('btn-save').innerText = "CONFIRMER LA RÉSERVATION";
+                document.getElementById('btn-save').style.background = "#d4af37";
             } else {
-                if(confirm(`Occupé par ${db[n].name}\nLibérer ?`)) delete db[n];
+                const data = db[num];
+                document.getElementById('modal-title').innerText = "Détails Chambre " + num;
+                document.getElementById('cust-name').value = data.name;
+                document.getElementById('cust-tel').value = data.tel;
+                document.getElementById('date-start').value = data.start;
+                document.getElementById('date-end').value = data.end;
+                document.getElementById('btn-save').innerText = "LIBÉRER LA CHAMBRE";
+                document.getElementById('btn-save').style.background = "#c0392b";
+            }
+            document.getElementById('reservation-modal').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        }
+
+        function saveReservation() {
+            if(!db[currentRoom]) {
+                const name = document.getElementById('cust-name').value;
+                const tel = document.getElementById('cust-tel').value;
+                const start = document.getElementById('date-start').value;
+                const end = document.getElementById('date-end').value;
+
+                if(name && tel && start && end) {
+                    db[currentRoom] = { name, tel, start, end };
+                    closeModal();
+                } else { alert("Veuillez remplir tous les champs !"); }
+            } else {
+                if(confirm("Voulez-vous vraiment libérer cette chambre ?")) {
+                    delete db[currentRoom];
+                    closeModal();
+                }
             }
             localStorage.setItem('opiumResa', JSON.stringify(db));
             renderHotel();
+        }
+
+        function closeModal() {
+            document.getElementById('reservation-modal').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        }
+
+        function toggleMenu(event) {
+            event.stopPropagation();
+            const card = document.getElementById('contactCard');
+            card.style.display = (card.style.display === 'block') ? 'none' : 'block';
+        }
+
+        function closeMenuOutside(event) {
+            const card = document.getElementById('contactCard');
+            if (card.style.display === 'block' && !document.getElementById('menuArea').contains(event.target)) {
+                card.style.display = 'none';
+            }
         }
     </script>
 </body>
