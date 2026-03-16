@@ -12,12 +12,51 @@
             color: #e0e0e0;
             margin: 0;
             padding: 0;
-            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
         }
 
         h1, h2, h3 { color: #d4af37; text-transform: uppercase; letter-spacing: 2px; }
 
-        /* --- NAVIGATION (3 BARRES) --- */
+        /* --- CONNEXION --- */
+        #login-screen {
+            align-self: center;
+            background: #111;
+            padding: 40px;
+            border: 1px solid #d4af37;
+            border-radius: 15px;
+            text-align: center;
+            width: 90%;
+            max-width: 350px;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
+        }
+
+        #login-screen input {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            background: #222;
+            border: 1px solid #444;
+            color: white;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+
+        #login-btn {
+            width: 100%;
+            padding: 15px;
+            background: #d4af37;
+            border: none;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        /* --- NAVIGATION --- */
+        #main-site { display: none; width: 100%; }
+
         .nav-header {
             background: #111;
             padding: 15px;
@@ -29,13 +68,7 @@
             z-index: 1000;
         }
 
-        .menu-btn {
-            font-size: 30px;
-            cursor: pointer;
-            color: #d4af37;
-            margin-right: 20px;
-            user-select: none;
-        }
+        .menu-btn { font-size: 30px; cursor: pointer; color: #d4af37; margin-right: 20px; }
 
         .side-menu {
             height: 100%;
@@ -59,7 +92,6 @@
             display: block;
             transition: 0.3s;
             cursor: pointer;
-            text-transform: uppercase;
         }
 
         .side-menu a:hover { color: #d4af37; background: #1a1a1a; }
@@ -69,10 +101,10 @@
         .content-section { padding: 40px 20px; max-width: 900px; margin: auto; display: none; }
         .active { display: block; }
 
-        /* --- ACCUEIL --- */
+        /* --- SECTIONS SPÉCIFIQUES --- */
         .hero-banner {
-            height: 250px;
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1000&q=80');
+            height: 200px;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1000&q=80');
             background-size: cover;
             background-position: center;
             display: flex;
@@ -82,113 +114,105 @@
             margin-bottom: 30px;
         }
 
-        /* --- CONTACTS (MIS À JOUR) --- */
-        .contact-card {
-            background: #111;
-            border: 1px solid #333;
-            border-left: 4px solid #d4af37;
-            padding: 20px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            transition: 0.3s;
-        }
-        .contact-card:hover { border-color: #d4af37; }
-        .contact-role { color: #d4af37; font-size: 0.8em; font-weight: bold; text-transform: uppercase; margin-bottom: 5px; display: block; }
-        .contact-name { font-size: 1.2em; font-weight: bold; display: block; margin-bottom: 5px; }
-        .contact-tel { color: #888; font-family: monospace; font-size: 1.1em; }
+        .contact-card { background: #111; border-left: 4px solid #d4af37; padding: 20px; border-radius: 5px; margin-bottom: 20px; }
 
         /* --- RÉSERVATIONS --- */
         .etage-container { background: #161616; margin: 20px 0; padding: 15px; border-radius: 12px; border: 1px solid #333; }
-        .chambres-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 8px; margin-top: 10px; }
+        .chambres-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 8px; }
         .chambre { aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 14px; }
-        .libre { background: #27ae60; color: white; }
-        .occupe { background: #c0392b; color: white; }
+        .libre { background: #27ae60; }
+        .occupe { background: #c0392b; }
 
-        /* --- FORMULAIRE MODALE --- */
+        /* --- MODALE --- */
         #reservation-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #1a1a1a; border: 2px solid #d4af37; padding: 25px; z-index: 3000; width: 90%; max-width: 400px; border-radius: 15px; }
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2500; }
-        input { width: 100%; padding: 12px; margin: 8px 0; background: #222; border: 1px solid #444; color: white; border-radius: 6px; box-sizing: border-box; }
 
         @media (max-width: 768px) { .chambres-grid { grid-template-columns: repeat(5, 1fr); } }
     </style>
 </head>
 <body onclick="closeNavOutside(event)">
 
-    <div class="nav-header">
-        <div class="menu-btn" onclick="openNav(event)">☰</div>
-        <h2 style="margin:0;">OPIUM NIGHT</h2>
+    <div id="login-screen">
+        <h1 style="font-size: 1.5rem;">Opium Night</h1>
+        <p style="color: #666; font-size: 0.9em; margin-bottom: 20px;">Accès au système de gestion</p>
+        <input type="text" id="username" placeholder="Identifiant">
+        <input type="password" id="password" placeholder="Mot de passe">
+        <button id="login-btn" onclick="checkLogin()">Entrer</button>
     </div>
 
-    <div id="mySidenav" class="side-menu">
-        <a class="close-btn" onclick="closeNav()">&times;</a>
-        <a onclick="showSection('accueil')">🏠 Histoire</a>
-        <a onclick="showSection('reservation')">🔑 Réservations</a>
-        <a onclick="showSection('contact')">📞 Contacts Personnel</a>
-    </div>
-
-    <div id="accueil" class="content-section active">
-        <div class="hero-banner">
-            <h1>L'HISTOIRE</h1>
-        </div>
-        <h2>Un Refuge de Luxe</h2>
-        <p style="line-height:1.7; color:#aaa;">
-            Fondé en 1924, l'Hôtel <strong>Opium Night</strong> est devenu au fil des décennies le point de rencontre incontournable de l'élite. 
-            Connu pour son atmosphère feutrée et son service d'une discrétion absolue, l'établissement a su préserver son âme d'origine tout en proposant un confort moderne exceptionnel. 
-            Chaque chambre raconte une part du mystère qui entoure ce lieu mythique.
-        </p>
-    </div>
-
-    <div id="contact" class="content-section">
-        <h1>Contacts de l'Hôtel</h1>
-        
-        <div class="contact-card">
-            <span class="contact-role">Réception</span>
-            <span class="contact-name">Juan de la Rosa</span>
-            <span class="contact-tel">📞 555-1111</span>
+    <div id="main-site">
+        <div class="nav-header">
+            <div class="menu-btn" onclick="openNav(event)">☰</div>
+            <h2 style="margin:0; font-size: 1.2rem;">OPIUM NIGHT</h2>
         </div>
 
-        <div class="contact-card">
-            <span class="contact-role">Barmaid</span>
-            <span class="contact-name">Esmeralda Cuervo</span>
-            <span class="contact-tel">📞 555-7153</span>
+        <div id="mySidenav" class="side-menu">
+            <a class="close-btn" onclick="closeNav()">&times;</a>
+            <a onclick="showSection('accueil')">👋 Bienvenue</a>
+            <a onclick="showSection('histoire')">📖 L'Histoire</a>
+            <a onclick="showSection('reservation')">🔑 Réservations</a>
+            <a onclick="showSection('contact')">📞 Contacts</a>
+            <hr style="border-color:#333; margin: 20px 0;">
+            <a onclick="location.reload()" style="color:#c0392b;">Déconnexion</a>
         </div>
 
-        <div class="contact-card">
-            <span class="contact-role">Organisatrice d’évent</span>
-            <span class="contact-name">Carmila Almeida</span>
-            <span class="contact-tel">📞 555-9269</span>
+        <div id="accueil" class="content-section active">
+            <div class="hero-banner"><h1>BIENVENUE</h1></div>
+            <h2>Bienvenue sur notre site internet</h2>
+            <p style="line-height:1.8; color:#bbb;">
+                Nous sommes ravis de vous accueillir sur la plateforme officielle de l'<strong>Opium Night</strong>. 
+                Ce site a été conçu pour faciliter la gestion de nos services et offrir un accès rapide à nos informations essentielles. 
+                Que vous soyez ici pour organiser un séjour, planifier un événement ou contacter notre équipe, vous trouverez tous les outils nécessaires dans les rubriques dédiées de notre menu.
+            </p>
+            <p style="color: #d4af37;">Explorez notre univers via le menu en haut à gauche.</p>
         </div>
 
-        <div class="contact-card">
-            <span class="contact-role">Sécurité</span>
-            <span class="contact-name">Marco "Le Roc"</span>
-            <span class="contact-tel">📞 555-6666</span>
+        <div id="histoire" class="content-section">
+            <h1>L'Histoire de l'Hôtel</h1>
+            <p style="line-height:1.8; color:#bbb;">
+                Depuis 1924, l'Hôtel <strong>Opium Night</strong> s'impose comme une institution de prestige. 
+                Né d'une volonté de créer un sanctuaire de discrétion absolue, il a traversé les siècles en conservant son architecture iconique et son atmosphère mystérieuse. 
+                Aujourd'hui, il reste le refuge privilégié de ceux qui exigent le meilleur, alliant tradition historique et services modernes.
+            </p>
         </div>
-    </div>
 
-    <div id="reservation" class="content-section">
-        <h1>Gestion des Chambres</h1>
-        <div id="hotel-layout"></div>
+        <div id="reservation" class="content-section">
+            <h1>Gestion des Chambres</h1>
+            <div id="hotel-layout"></div>
+        </div>
+
+        <div id="contact" class="content-section">
+            <h1>Contacts Personnel</h1>
+            <div class="contact-card"><strong>Juan de la Rosa</strong><br><small style="color:gold">Réception</small><br>📞 555-1111</div>
+            <div class="contact-card"><strong>Esmeralda Cuervo</strong><br><small style="color:gold">Barmaid</small><br>📞 555-7153</div>
+            <div class="contact-card"><strong>Carmila Almeida</strong><br><small style="color:gold">Organisatrice d’évent</small><br>📞 555-9269</div>
+            <div class="contact-card"><strong>Marco "Le Roc"</strong><br><small style="color:gold">Sécurité</small><br>📞 555-6666</div>
+        </div>
     </div>
 
     <div class="overlay" id="overlay" onclick="closeModal()"></div>
     <div id="reservation-modal">
-        <h2 id="modal-title" style="color:gold; margin:0 0 15px 0;">Réservation</h2>
+        <h2 id="modal-title" style="color:gold; margin:0 0 15px 0;">Détails</h2>
         <input type="text" id="cust-name" placeholder="Nom & Prénom">
-        <input type="text" id="cust-tel" placeholder="Numéro de téléphone">
-        <div style="display:flex; gap:10px">
-            <input type="date" id="date-start">
-            <input type="date" id="date-end">
-        </div>
+        <input type="text" id="cust-tel" placeholder="Téléphone">
+        <div style="display:flex; gap:10px"><input type="date" id="date-start"><input type="date" id="date-end"></div>
         <button id="btn-save" style="width:100%; padding:15px; border:none; border-radius:8px; font-weight:bold; cursor:pointer; margin-top:10px;" onclick="saveReservation()"></button>
         <button onclick="closeModal()" style="background:none; border:none; color:#888; width:100%; margin-top:10px; cursor:pointer;">Annuler</button>
     </div>
 
     <script>
+        const USER = "admin", PASS = "opium2024";
         let db = JSON.parse(localStorage.getItem('opiumResa')) || {};
         let currentRoom = null;
 
-        // NAVIGATION
+        function checkLogin() {
+            if(document.getElementById('username').value === USER && document.getElementById('password').value === PASS) {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('main-site').style.display = 'block';
+                document.body.style.display = 'block';
+            } else { alert("Accès refusé"); }
+        }
+
         function openNav(e) { e.stopPropagation(); document.getElementById("mySidenav").style.width = "280px"; }
         function closeNav() { document.getElementById("mySidenav").style.width = "0"; }
         function closeNavOutside(e) { if(!document.getElementById("mySidenav").contains(e.target)) closeNav(); }
@@ -200,7 +224,6 @@
             if(id === 'reservation') renderHotel();
         }
 
-        // CHAMBRES
         function renderHotel() {
             const container = document.getElementById('hotel-layout');
             container.innerHTML = "";
@@ -227,15 +250,14 @@
             currentRoom = num;
             const btn = document.getElementById('btn-save');
             if(!db[num]) {
-                document.getElementById('modal-title').innerText = "Réserver Chambre " + num;
-                document.getElementById('cust-name').value = "";
-                document.getElementById('cust-tel').value = "";
+                document.getElementById('modal-title').innerText = "Réserver : " + num;
+                document.getElementById('cust-name').value = ""; document.getElementById('cust-tel').value = "";
                 btn.innerText = "CONFIRMER"; btn.style.background = "#d4af37";
             } else {
-                document.getElementById('modal-title').innerText = "Occupée : " + num;
+                document.getElementById('modal-title').innerText = "Détails : " + num;
                 document.getElementById('cust-name').value = db[num].name;
                 document.getElementById('cust-tel').value = db[num].tel;
-                btn.innerText = "LIBÉRER LA CHAMBRE"; btn.style.background = "#c0392b";
+                btn.innerText = "LIBÉRER"; btn.style.background = "#c0392b";
             }
             document.getElementById('reservation-modal').style.display = 'block';
             document.getElementById('overlay').style.display = 'block';
@@ -248,16 +270,13 @@
                 const s = document.getElementById('date-start').value;
                 const e = document.getElementById('date-end').value;
                 if(name && tel && s && e) db[currentRoom] = { name, tel, s, e };
-                else return alert("Veuillez remplir toutes les informations.");
+                else return alert("Infos manquantes");
             } else { delete db[currentRoom]; }
             localStorage.setItem('opiumResa', JSON.stringify(db));
             closeModal(); renderHotel();
         }
 
-        function closeModal() {
-            document.getElementById('reservation-modal').style.display = 'none';
-            document.getElementById('overlay').style.display = 'none';
-        }
+        function closeModal() { document.getElementById('reservation-modal').style.display = 'none'; document.getElementById('overlay').style.display = 'none'; }
     </script>
 </body>
 </html>
