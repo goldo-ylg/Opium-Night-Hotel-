@@ -3,175 +3,203 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Opium Night - Accès Restreint</title>
+    <title>Opium Night - Gestion Mobile & PC</title>
     <style>
-        /* STYLE GÉNÉRAL */
+        /* --- BASE & COULEURS --- */
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background-color: #0a0a0a;
             color: #e0e0e0;
             margin: 0;
+            padding: 0;
             display: flex;
             justify-content: center;
-            align-items: center;
             min-height: 100vh;
-            overflow-x: hidden;
         }
 
-        /* ÉCRAN DE CONNEXION */
+        /* --- ÉCRAN DE CONNEXION --- */
         #login-screen {
+            align-self: center;
             background: #1a1a1a;
-            padding: 40px;
-            border: 2px solid #d4af37;
+            padding: 30px;
+            border: 1px solid #d4af37;
             border-radius: 15px;
             text-align: center;
-            box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
-            width: 300px;
+            width: 90%;
+            max-width: 350px;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.1);
         }
 
-        #login-screen h1 { color: #d4af37; margin-bottom: 30px; }
-        
-        input {
+        #login-screen input {
             width: 100%;
-            padding: 12px;
+            padding: 15px;
             margin: 10px 0;
-            background: #333;
+            background: #222;
             border: 1px solid #444;
             color: white;
-            border-radius: 5px;
+            border-radius: 8px;
+            font-size: 16px; /* Évite le zoom auto sur iPhone */
+        }
+
+        #login-btn {
+            width: 100%;
+            padding: 15px;
+            background: #d4af37;
+            border: none;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        /* --- SITE PRINCIPAL (Contenu) --- */
+        #main-site { 
+            display: none; 
+            width: 100%; 
+            max-width: 1200px; 
+            padding: 20px; 
             box-sizing: border-box;
         }
 
-        button#login-btn {
-            width: 100%;
-            padding: 12px;
-            background: #d4af37;
-            border: none;
-            color: black;
-            font-weight: bold;
-            cursor: pointer;
-            border-radius: 5px;
+        h1 { color: #d4af37; text-align: center; letter-spacing: 2px; }
+
+        /* --- MENU CONTACT (Responsive) --- */
+        .menu-container { position: fixed; top: 15px; right: 15px; z-index: 2000; }
+        .bouton-dots { 
+            background: #d4af37; color: black; width: 50px; height: 50px; 
+            border-radius: 10px; display: flex; align-items: center; 
+            justify-content: center; font-size: 25px; cursor: pointer;
+        }
+
+        .contact-card {
+            display: none; background: #1a1a1a; border: 1px solid #d4af37;
+            padding: 20px; position: absolute; top: 60px; right: 0;
+            width: 260px; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+
+        /* --- GRILLE DES CHAMBRES RESPONSIVE --- */
+        .etage-container {
+            background: #161616; margin: 20px 0; padding: 15px;
+            border-radius: 12px; border-left: 4px solid #d4af37;
+        }
+
+        .chambres-grid {
+            display: grid;
+            /* PAR DÉFAUT (PC) : 10 colonnes */
+            grid-template-columns: repeat(10, 1fr);
+            gap: 8px;
             margin-top: 10px;
         }
 
-        /* SITE PRINCIPAL (Caché au départ) */
-        #main-site { display: none; width: 100%; padding: 20px; }
+        .chambre {
+            aspect-ratio: 1/1; display: flex; align-items: center;
+            justify-content: center; border-radius: 6px; font-weight: bold;
+            cursor: pointer; font-size: 14px; transition: 0.2s;
+        }
 
-        /* REPRISE DU STYLE PRÉCÉDENT */
-        .menu-container { position: fixed; top: 20px; right: 20px; z-index: 1000; }
-        .bouton-dots { background-color: #d4af37; color: black; width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 30px; cursor: pointer; }
-        .contact-card { display: none; background: #1a1a1a; border: 1px solid #d4af37; padding: 20px; position: absolute; top: 60px; right: 0; width: 280px; text-align: left; }
-        
-        .etage-container { background: #161616; margin: 20px auto; padding: 20px; border-radius: 10px; max-width: 900px; }
-        .chambres-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 10px; margin-top: 15px; }
-        .chambre { aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center; border-radius: 4px; font-weight: bold; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); }
-        .libre { background-color: #27ae60; }
-        .occupe { background-color: #c0392b; }
-        
-        .employe { border-bottom: 1px solid #333; padding-bottom: 5px; margin-bottom: 10px; }
-        .role { color: #d4af37; font-size: 0.8em; font-weight: bold; }
+        .libre { background: #27ae60; border: 1px solid #1e8449; }
+        .occupe { background: #c0392b; border: 1px solid #922b21; }
+
+        /* --- MEDIA QUERIES (ADAPTATION TÉLÉPHONE) --- */
+        @media (max-width: 768px) {
+            .chambres-grid {
+                /* SUR TABLETTE : 5 colonnes */
+                grid-template-columns: repeat(5, 1fr);
+            }
+            .contact-card {
+                position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+                width: 100%; height: 100%; border-radius: 0; border: none;
+                box-sizing: border-box;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .chambres-grid {
+                /* SUR PETIT TÉLÉPHONE : 4 colonnes */
+                grid-template-columns: repeat(4, 1fr);
+            }
+            h1 { font-size: 1.5rem; }
+        }
     </style>
 </head>
 <body>
 
     <div id="login-screen">
-        <h1>OPIUM NIGHT</h1>
-        <p>Accès Personnel</p>
+        <h2 style="color:#d4af37">OPIUM NIGHT</h2>
         <input type="text" id="username" placeholder="Identifiant">
         <input type="password" id="password" placeholder="Mot de passe">
-        <button id="login-btn" onclick="checkLogin()">SE CONNECTER</button>
-        <p id="error-msg" style="color: red; display: none; font-size: 0.8em; margin-top: 10px;">Identifiants incorrects</p>
+        <button id="login-btn" onclick="checkLogin()">ACCÉDER</button>
     </div>
 
     <div id="main-site">
         <div class="menu-container">
             <div class="bouton-dots" onclick="toggleMenu()">⋮</div>
             <div id="contactCard" class="contact-card">
-                <h3 style="color:#d4af37;">Contacts Hôtel</h3>
-                <div class="employe"><div class="role">Réception</div>Juan de la Rosa<br>📞 555-1111</div>
-                <div class="employe"><div class="role">Directeur</div>Mr. Opium<br>📞 555-5555</div>
-                <div class="employe"><div class="role">Sécurité</div>Marco "Le Roc"<br>📞 555-6666</div>
+                <button onclick="toggleMenu()" style="float:right; background:none; border:none; color:gold; font-size:20px;">✕</button>
+                <h3 style="color:gold">Personnel</h3>
+                <div style="margin-bottom:10px"><strong>Juan de la Rosa</strong><br><small>Réception</small><br>📞 555-1111</div>
+                <div style="margin-bottom:10px"><strong>Elena Rico</strong><br><small>Barmaid</small><br>📞 555-3333</div>
+                <div style="margin-bottom:10px"><strong>Mr. Opium</strong><br><small>Directeur</small><br>📞 555-5555</div>
+                <div style="margin-bottom:10px"><strong>Marco</strong><br><small>Sécurité</small><br>📞 555-6666</div>
             </div>
         </div>
 
-        <h1 style="color:#d4af37;">OPIUM NIGHT - GESTION</h1>
+        <h1>OPIUM NIGHT</h1>
         <div id="hotel-layout"></div>
     </div>
 
     <script>
-        // CONFIGURATION DES IDENTIFIANTS
-        const ADMIN_USER = "admin";
-        const ADMIN_PASS = "opium2024"; // Tu peux changer ça !
+        const USER = "admin";
+        const PASS = "opium2024";
 
         function checkLogin() {
-            const user = document.getElementById('username').value;
-            const pass = document.getElementById('password').value;
-
-            if (user === ADMIN_USER && pass === ADMIN_PASS) {
+            if(document.getElementById('username').value === USER && document.getElementById('password').value === PASS) {
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('main-site').style.display = 'block';
-                document.body.style.alignItems = 'flex-start'; // Aligner en haut une fois connecté
-                createHotel();
-            } else {
-                document.getElementById('error-msg').style.display = 'block';
-            }
+                renderHotel();
+            } else { alert("Accès refusé"); }
         }
 
-        // GESTION DES CHAMBRES
-        let reservations = JSON.parse(localStorage.getItem('opiumData')) || {};
+        let db = JSON.parse(localStorage.getItem('opiumResa')) || {};
 
-        function createHotel() {
-            const layout = document.getElementById('hotel-layout');
-            layout.innerHTML = ""; // Vider avant de créer
+        function renderHotel() {
+            const container = document.getElementById('hotel-layout');
+            container.innerHTML = "";
             for (let e = 1; e <= 3; e++) {
-                let etageDiv = document.createElement('div');
-                etageDiv.className = 'etage-container';
-                etageDiv.innerHTML = `<h2>Étage ${e}</h2>`;
+                let section = document.createElement('div');
+                section.className = 'etage-container';
+                section.innerHTML = `<h3>Étage ${e}</h3>`;
                 let grid = document.createElement('div');
                 grid.className = 'chambres-grid';
                 
                 for (let c = 1; c <= 20; c++) {
                     let num = (e * 100) + c;
-                    let btn = document.createElement('div');
-                    btn.className = `chambre ${reservations[num] ? 'occupe' : 'libre'}`;
-                    btn.innerText = num;
-                    btn.onclick = () => reserver(num);
-                    grid.appendChild(btn);
+                    let box = document.createElement('div');
+                    box.className = `chambre ${db[num] ? 'occupe' : 'libre'}`;
+                    box.innerText = num;
+                    box.onclick = () => handleRoom(num);
+                    grid.appendChild(box);
                 }
-                etageDiv.appendChild(grid);
-                layout.appendChild(etageDiv);
+                section.appendChild(grid);
+                container.appendChild(section);
             }
         }
 
-        function reserver(num) {
-            if (!reservations[num]) {
-                let nom = prompt("Nom du client :");
+        function handleRoom(n) {
+            if(!db[n]) {
+                let name = prompt("Nom du client :");
                 let tel = prompt("Téléphone :", "555-0000");
-                if (nom && tel) {
-                    reservations[num] = { nom, tel };
-                    saveAndRefresh();
-                }
+                if(name && tel) { db[n] = {name, tel}; }
             } else {
-                if (confirm(`Chambre ${num} occupée par ${reservations[num].nom}.\nLibérer ?`)) {
-                    delete reservations[num];
-                    saveAndRefresh();
-                }
+                if(confirm(`Occupé par ${db[n].name}\nLibérer ?`)) { delete db[n]; }
             }
-        }
-
-        function saveAndRefresh() {
-            localStorage.setItem('opiumData', JSON.stringify(reservations));
-            createHotel();
+            localStorage.setItem('opiumResa', JSON.stringify(db));
+            renderHotel();
         }
 
         function toggleMenu() {
-            const card = document.getElementById('contactCard');
-            card.style.display = card.style.display === 'block' ? 'none' : 'block';
+            const m = document.getElementById('contactCard');
+            m.style.display = (m.style.display === 'block') ? 'none' : 'block';
         }
     </script>
 </body>
 </html>
-
-
-
-
